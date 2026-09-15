@@ -1,0 +1,6 @@
+{
+  "name": "PrimeChain Document Capture",
+  "description": "Convert trucking operational documents into structured database records with AI extraction and human-in-the-loop review.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

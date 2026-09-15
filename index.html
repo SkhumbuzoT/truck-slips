@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PrimeChain Document Capture</title>
+    <script>
+      // Ensure window.fetch has both getter and setter defined across window, Window.prototype,
+      // and prototype chain so any scripts or iframe wrappers attempting to assign or wrap window.fetch do not throw
+      (function() {
+        try {
+          var rawFetch = window.fetch;
+          if (typeof rawFetch !== 'function') return;
+          var currentFetch = rawFetch.bind(window);
+
+          function getFetch() {
+            return currentFetch;
+          }
+          function setFetch(fn) {
+            currentFetch = fn;
+          }
+
+          // 1. Prototype chain traversal (Window.prototype, WindowProperties, etc.)
+          var p = window;
+          while (p && p !== Object.prototype) {
+            try {
+              var desc = Object.getOwnPropertyDescriptor(p, 'fetch');
+              if (desc) {
+                Object.defineProperty(p, 'fetch', {
+                  get: getFetch,
+                  set: setFetch,
+                  configurable: true,
+                  enumerable: true
+                });
+              }
+            } catch (e) {}
+            p = Object.getPrototypeOf(p);
+          }
+
+          // 2. Explicitly on Window.prototype
+          if (typeof Window !== 'undefined' && Window.prototype) {
+            try {
+              Object.defineProperty(Window.prototype, 'fetch', {
+                get: getFetch,
+                set: setFetch,
+                configurable: true,
+                enumerable: true
+              });
+            } catch (e) {}
+          }
+
+          // 3. Directly on window instance
+          try {
+            Object.defineProperty(window, 'fetch', {
+              get: getFetch,
+              set: setFetch,
+              configurable: true,
+              enumerable: true
+            });
+          } catch (e) {}
+
+          // 4. globalThis
+          if (typeof globalThis !== 'undefined' && globalThis !== window) {
+            try {
+              Object.defineProperty(globalThis, 'fetch', {
+                get: getFetch,
+                set: setFetch,
+                configurable: true,
+                enumerable: true
+              });
+            } catch (e) {}
+          }
+        } catch (err) {
+          // Gracefully ignore
+        }
+      })();
+    </script>
+    <meta name="description" content="Convert trucking operational documents into structured database records with AI extraction and human-in-the-loop review." />
+    <meta property="og:title" content="PrimeChain Document Capture" />
+    <meta property="og:description" content="Convert trucking operational documents into structured database records with AI extraction and human-in-the-loop review." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
